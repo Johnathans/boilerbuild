@@ -7,7 +7,6 @@ import '@fortawesome/fontawesome-svg-core/styles.css';
 // Import components with exact casing as shown in your directory
 import BootstrapClient from '../components/BootstrapClient';
 import ClientLayout from '../components/ClientLayout';
-import Footer from '../components/Footer';
 
 // Tell Font Awesome to skip adding CSS automatically
 config.autoAddCss = false;
@@ -30,7 +29,6 @@ export default function RootLayout({
             <ClientLayout>
                 {children}
             </ClientLayout>
-            <Footer />
         </div>
         </body>
         </html>
