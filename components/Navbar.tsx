@@ -6,8 +6,13 @@ import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faBars } from "@fortawesome/free-solid-svg-icons";
 
-export default function Navbar() {
-    const [searchQuery, setSearchQuery] = useState("");
+interface NavbarProps {
+    searchQuery?: string;
+    setSearchQuery?: (query: string) => void;
+}
+
+export default function Navbar({ searchQuery, setSearchQuery }: NavbarProps) {
+    const [localSearchQuery, setLocalSearchQuery] = useState(searchQuery || "");
 
     return (
         <header className="bg-white border-bottom">
@@ -51,8 +56,14 @@ export default function Navbar() {
                                 type="text"
                                 placeholder="Search boilerplates..."
                                 className="form-control ps-4"
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
+                                value={searchQuery !== undefined ? searchQuery : localSearchQuery}
+                                onChange={(e) => {
+                                    if (setSearchQuery) {
+                                        setSearchQuery(e.target.value);
+                                    } else {
+                                        setLocalSearchQuery(e.target.value);
+                                    }
+                                }}
                             />
                             <span
                                 className="position-absolute"

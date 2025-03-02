@@ -4,13 +4,26 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faCheck, faStar } from '@fortawesome/free-solid-svg-icons';
-import { faTwitter, faGithub, faDiscord } from '@fortawesome/free-brands-svg-icons';
+import { faArrowLeft, faCheck } from '@fortawesome/free-solid-svg-icons';
+
+interface PricingPlan {
+    monthly: number;
+    yearly: number;
+    features: string[];
+}
+
+interface PricingPlans {
+    starter: PricingPlan;
+    growth: PricingPlan;
+    enterprise: PricingPlan;
+}
+
+type PlanType = 'monthly' | 'yearly';
 
 export default function SponsorPage() {
-    const [selectedPlan, setSelectedPlan] = useState('monthly');
+    const [selectedPlan, setSelectedPlan] = useState<PlanType>('monthly');
 
-    const pricingPlans = {
+    const pricingPlans: PricingPlans = {
         starter: {
             monthly: 49,
             yearly: 499,
@@ -44,7 +57,7 @@ export default function SponsorPage() {
                 'Direct integration possibilities'
             ]
         }
-    };
+    } as const;
 
     return (
         <div className="bg-light">
@@ -79,7 +92,7 @@ export default function SponsorPage() {
                         <h2 className="h3 mb-4">Why Sponsor BoilerBuild?</h2>
                         <p className="lead text-muted mb-0">
                             BoilerBuild is the go-to resource for developers looking for quality boilerplates and starter kits.
-                            As a sponsor, you'll reach a highly engaged audience of developers and decision-makers.
+                            As a sponsor, you&apos;ll reach a highly engaged audience of developers and decision-makers.
                         </p>
                     </div>
                 </div>
@@ -111,7 +124,7 @@ export default function SponsorPage() {
                                 </div>
                                 <h3 className="h5 mb-3">Targeted Visibility</h3>
                                 <p className="text-muted mb-0">
-                                    Showcase your products, tools, and services directly to developers when they're actively seeking solutions.
+                                    Showcase your products, tools, and services directly to developers when they&apos;re actively seeking solutions.
                                 </p>
                             </div>
                         </div>
@@ -236,6 +249,16 @@ export default function SponsorPage() {
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div className="row justify-content-center mb-5">
+                    <div className="col-lg-8 text-center">
+                        <p className="mb-4">
+                          Don&apos;t miss out on the opportunity to showcase your boilerplate to thousands of developers who are looking for the perfect starting point for their next project.
+                        </p>
+                        <p className="mb-4">
+                          Your sponsorship helps us maintain and improve the platform, ensuring that developers can find the best boilerplates for their needs. We&apos;re committed to providing value to both sponsors and users.
+                        </p>
                     </div>
                 </div>
             </div>

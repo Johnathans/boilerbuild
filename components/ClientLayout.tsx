@@ -1,16 +1,21 @@
 // app/components/ClientLayout.tsx
-"use client"
+"use client";
 
-import { useState } from 'react';
+import BootstrapClient from './BootstrapClient';
+import Footer from './Footer';
 import Navbar from './Navbar';
 
-export default function ClientLayout({ children }) {
-    const [searchQuery, setSearchQuery] = useState('');
+interface ClientLayoutProps {
+    children: React.ReactNode;
+}
 
+export default function ClientLayout({ children }: ClientLayoutProps) {
     return (
         <>
-            <Navbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-            {children}
+            <BootstrapClient />
+            <Navbar />
+            <main>{children}</main>
+            <Footer />
         </>
     );
 }

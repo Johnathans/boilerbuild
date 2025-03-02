@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
 // Import the listings data from the [id] page
 // In a real application, this would come from a shared data source or API
@@ -53,7 +55,7 @@ const listings = [
   },
 ];
 
-export default function ListingsPage() {
+function ListingsContent() {
   const searchParams = useSearchParams();
   const category = searchParams.get("category");
 
@@ -87,12 +89,21 @@ export default function ListingsPage() {
         {filteredListings.map((listing) => (
           <div key={listing.id} className="col">
             <div className="card h-100 shadow-sm border-0">
-              <img
-                src={listing.image || "https://via.placeholder.com/800x300?text=Placeholder+Image"}
-                className="card-img-top"
-                alt={listing.name}
-                style={{ height: "200px", objectFit: "cover" }}
-              />
+              <div style={{ 
+                position: 'relative',
+                height: '200px',
+                backgroundColor: listing.category === 'Next.js' ? '#000' : '#fff'
+              }}>
+                <Image
+                  src={listing.image || "https://via.placeholder.com/800x300?text=Placeholder+Image"}
+                  alt={listing.name}
+                  fill
+                  style={{
+                    objectFit: 'contain',
+                    padding: '2rem'
+                  }}
+                />
+              </div>
               <div className="card-body">
                 <h5 className="card-title">{listing.name}</h5>
                 <p className="card-text">{listing.description}</p>
@@ -109,5 +120,13 @@ export default function ListingsPage() {
         ))}
       </div>
     </div>
+  );
+}
+
+export default function ListingsPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ListingsContent />
+    </Suspense>
   );
 }

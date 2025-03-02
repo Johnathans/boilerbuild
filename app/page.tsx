@@ -9,12 +9,8 @@ import { faFilter, faTimes, faSearch } from '@fortawesome/free-solid-svg-icons';
 // State management
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [selectedFilters, setSelectedFilters] = useState([]);
+  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [expandedCategories, setExpandedCategories] = useState({
-    'Programming Languages': true,
-    'Tool Selection Kits': false
-  });
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Sample data
@@ -101,21 +97,13 @@ export default function Home() {
 
   const filterOptions = ['TypeScript', 'JavaScript', 'API', 'Tailwind', 'SCSS', 'E-commerce'];
 
-  // Toggle category expansion
-  const toggleCategory = (category: string) => {
-    setExpandedCategories({
-      ...expandedCategories,
-      [category]: !expandedCategories[category]
-    });
-  };
-
   // Filter handlers
-  const handleCategorySelect = (category) => {
+  const handleCategorySelect = (category: string) => {
     setSelectedCategory(category);
     setMobileMenuOpen(false);
   };
 
-  const handleFilterToggle = (filter) => {
+  const handleFilterToggle = (filter: string) => {
     if (selectedFilters.includes(filter)) {
       setSelectedFilters(selectedFilters.filter(f => f !== filter));
     } else {

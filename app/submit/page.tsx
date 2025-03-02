@@ -1,23 +1,42 @@
 // app/submit/page.tsx
 "use client"
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faUpload, faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
 
+interface FormData {
+    name: string;
+    description: string;
+    category: string;
+    githubUrl: string;
+    demoUrl: string;
+    email: string;
+    tags: string[];
+    screenshot: File | null;
+}
+
+interface TagFormData {
+    currentTag: string;
+}
+
 export default function SubmitBoilerplatePage() {
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<FormData>({
         name: '',
         description: '',
         category: '',
-        repositoryUrl: '',
+        githubUrl: '',
         demoUrl: '',
+        email: '',
         tags: [],
         screenshot: null
     });
 
-    const [currentTag, setCurrentTag] = useState('');
+    const [currentTag, setCurrentTag] = useState<TagFormData>({
+        currentTag: ''
+    });
+
     const [formSubmitted, setFormSubmitted] = useState(false);
 
     const categories = [
@@ -34,30 +53,32 @@ export default function SubmitBoilerplatePage() {
         'Svelte'
     ];
 
-    const handleInputChange = (e) => {
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleFileChange = (e) => {
-        setFormData(prev => ({ ...prev, screenshot: e.target.files[0] }));
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0] || null;
+        setFormData(prev => ({ ...prev, screenshot: file }));
     };
 
     const addTag = () => {
-        if (currentTag && !formData.tags.includes(currentTag)) {
-            setFormData(prev => ({ ...prev, tags: [...prev.tags, currentTag] }));
-            setCurrentTag('');
+        const newTag = currentTag.currentTag.trim();
+        if (newTag && !formData.tags.includes(newTag)) {
+            setFormData(prev => ({ ...prev, tags: [...prev.tags, newTag] }));
+            setCurrentTag({ currentTag: '' });
         }
     };
 
-    const removeTag = (tagToRemove) => {
+    const removeTag = (tagToRemove: string) => {
         setFormData(prev => ({
             ...prev,
             tags: prev.tags.filter(tag => tag !== tagToRemove)
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log('Form submitted:', formData);
         // Here you would normally send the data to your backend
@@ -123,7 +144,7 @@ export default function SubmitBoilerplatePage() {
                                                 name="description"
                                                 value={formData.description}
                                                 onChange={handleInputChange}
-                                                rows="4"
+                                                rows={4}
                                                 placeholder="Describe your boilerplate, its features, and use cases..."
                                                 required
                                             ></textarea>
@@ -147,13 +168,13 @@ export default function SubmitBoilerplatePage() {
                                         </div>
 
                                         <div className="mb-4">
-                                            <label htmlFor="repositoryUrl" className="form-label fw-medium">Repository URL</label>
+                                            <label htmlFor="githubUrl" className="form-label fw-medium">Repository URL</label>
                                             <input
                                                 type="url"
                                                 className="form-control form-control-lg rounded-3"
-                                                id="repositoryUrl"
-                                                name="repositoryUrl"
-                                                value={formData.repositoryUrl}
+                                                id="githubUrl"
+                                                name="githubUrl"
+                                                value={formData.githubUrl}
                                                 onChange={handleInputChange}
                                                 placeholder="https://github.com/username/repository"
                                                 required
@@ -174,14 +195,28 @@ export default function SubmitBoilerplatePage() {
                                         </div>
 
                                         <div className="mb-4">
+                                            <label htmlFor="email" className="form-label fw-medium">Email</label>
+                                            <input
+                                                type="email"
+                                                className="form-control form-control-lg rounded-3"
+                                                id="email"
+                                                name="email"
+                                                value={formData.email}
+                                                onChange={handleInputChange}
+                                                placeholder="your-email@example.com"
+                                                required
+                                            />
+                                        </div>
+
+                                        <div className="mb-4">
                                             <label htmlFor="tags" className="form-label fw-medium">Tags</label>
                                             <div className="input-group input-group-lg">
                                                 <input
                                                     type="text"
                                                     className="form-control rounded-start-3"
                                                     id="tags"
-                                                    value={currentTag}
-                                                    onChange={(e) => setCurrentTag(e.target.value)}
+                                                    value={currentTag.currentTag}
+                                                    onChange={(e) => setCurrentTag({ currentTag: e.target.value })}
                                                     placeholder="E.g., TypeScript, Tailwind, Authentication"
                                                 />
                                                 <button
@@ -192,7 +227,7 @@ export default function SubmitBoilerplatePage() {
                                                     <FontAwesomeIcon icon={faPlus} />
                                                 </button>
                                             </div>
-                                            {formData.tags.length > 0 && (
+                                            {formData.tags && formData.tags.length > 0 && (
                                                 <div className="d-flex flex-wrap gap-2 mt-3">
                                                     {formData.tags.map(tag => (
                                                         <span key={tag} className="badge bg-light text-dark border px-3 py-2 rounded-pill">
